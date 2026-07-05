@@ -33,6 +33,7 @@ SEEDS = [0, 1, 2, 3, 4]
 # Logistic Regression, Random Forest, Gradient Boosting only.
 # Decision Tree is deliberately excluded — same family as Random Forest.
 MODEL_NAMES = ["logistic_regression", "random_forest", "gradient_boosting"]
+MODEL_RANDOM_STATE = 42  # fixed seed for model training reproducibility
 
 # --- Perturbations ---
 # shift_distribution simulates covariate shift only (shifts one feature's mean

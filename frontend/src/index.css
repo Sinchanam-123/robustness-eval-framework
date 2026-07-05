@@ -1,0 +1,18 @@
+:root {
+  color-scheme: light;
+}
+
+body {
+  margin: 0;
+  background: #fafafa;
+  color: #1a1a1a;
+}
+
+table {
+  margin-bottom: 8px;
+}
+
+th {
+  background: #f0f0f0;
+  text-align: left;
+}

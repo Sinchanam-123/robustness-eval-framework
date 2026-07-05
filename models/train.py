@@ -56,11 +56,15 @@ def build_models():
 
 
 def compute_metrics(y_true, y_pred) -> dict:
+    # zero_division=0: at high perturbation severities a model can collapse
+    # to predicting a single class, which would otherwise raise/warn on an
+    # undefined precision or recall — 0.0 is the correct score in that case,
+    # not an error.
     return {
         "accuracy": accuracy_score(y_true, y_pred),
-        "precision": precision_score(y_true, y_pred, pos_label=1),
-        "recall": recall_score(y_true, y_pred, pos_label=1),
-        "f1": f1_score(y_true, y_pred, pos_label=1),
+        "precision": precision_score(y_true, y_pred, pos_label=1, zero_division=0),
+        "recall": recall_score(y_true, y_pred, pos_label=1, zero_division=0),
+        "f1": f1_score(y_true, y_pred, pos_label=1, zero_division=0),
     }
 
 

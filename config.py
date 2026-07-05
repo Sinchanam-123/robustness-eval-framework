@@ -19,6 +19,7 @@ RESULTS_CSV_PATH = PROJECT_ROOT / "results.csv"
 BASELINE_METRICS_PATH = PROJECT_ROOT / "models" / "baseline_metrics.csv"
 AGGREGATED_RESULTS_PATH = PROJECT_ROOT / "evaluation" / "aggregated_results.csv"
 ROBUSTNESS_INDEX_PATH = PROJECT_ROOT / "evaluation" / "robustness_index.csv"
+PLOTS_DIR = PROJECT_ROOT / "visualization" / "plots"
 
 # --- Dataset ---
 TARGET_COLUMN = "income"

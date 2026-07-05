@@ -17,6 +17,8 @@ FEATURE_STATS_PATH = PROJECT_ROOT / "data" / "feature_stats.md"
 MODELS_DIR = PROJECT_ROOT / "models" / "artifacts"
 RESULTS_CSV_PATH = PROJECT_ROOT / "results.csv"
 BASELINE_METRICS_PATH = PROJECT_ROOT / "models" / "baseline_metrics.csv"
+AGGREGATED_RESULTS_PATH = PROJECT_ROOT / "evaluation" / "aggregated_results.csv"
+ROBUSTNESS_INDEX_PATH = PROJECT_ROOT / "evaluation" / "robustness_index.csv"
 
 # --- Dataset ---
 TARGET_COLUMN = "income"
@@ -44,4 +46,8 @@ OUTLIER_SCALE = 5  # multiplier applied to perturbed rows in add_outliers
 SHIFT_FEATURE = "age"  # feature whose mean is shifted by shift_distribution
 
 # --- Robustness index ---
+# retention(severity) = metric(severity) / metric(severity=0); robustness_index
+# = mean(retention across tested severities), averaged across perturbation
+# types. ROBUSTNESS_METRIC picks which per-run metric column that's computed on.
+ROBUSTNESS_METRIC = "accuracy"
 ROBUSTNESS_INDEX_LOW_THRESHOLD = 0.7  # below this, a model "degrades significantly"

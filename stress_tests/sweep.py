@@ -34,6 +34,10 @@ from stress_tests.perturbations import (
 
 
 def load_models() -> dict:
+    # Security note: joblib.load uses pickle, which can execute arbitrary code
+    # when unpickling. These artifacts are only ever produced locally by
+    # models/train.py in this same pipeline, so the trust boundary is safe.
+    # Never point MODELS_DIR at a .joblib file from an untrusted source.
     return {
         name: joblib.load(config.MODELS_DIR / f"{name}.joblib")
         for name in config.MODEL_NAMES

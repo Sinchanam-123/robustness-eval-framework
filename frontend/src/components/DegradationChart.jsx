@@ -4,6 +4,7 @@ import {
   Legend,
   Line,
   LineChart,
+  ReferenceLine,
   Tooltip,
   XAxis,
   YAxis,
@@ -59,7 +60,13 @@ function buildChartData(results, models, perturbation, metric) {
   };
 }
 
-export default function DegradationChart({ results, models, perturbation, metric }) {
+export default function DegradationChart({
+  results,
+  models,
+  perturbation,
+  metric,
+  selectedSeverity,
+}) {
   const { data, modelNames } = buildChartData(results, models, perturbation, metric);
   const [ref, width] = useContainerWidth();
 
@@ -91,6 +98,14 @@ export default function DegradationChart({ results, models, perturbation, metric
           />
           <Tooltip formatter={(v) => (typeof v === "number" ? v.toFixed(3) : v)} />
           <Legend />
+          {selectedSeverity != null && (
+            <ReferenceLine
+              x={selectedSeverity}
+              stroke="#888"
+              strokeDasharray="4 4"
+              label={{ value: `severity ${selectedSeverity}`, position: "top", fontSize: 11 }}
+            />
+          )}
           {modelNames.map((name) => (
             <Line
               key={name}

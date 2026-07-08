@@ -9,6 +9,8 @@ import {
 import { METRICS } from "./theme";
 import DegradationChart from "./components/DegradationChart";
 import RobustnessCards from "./components/RobustnessCards";
+import SeveritySlider from "./components/SeveritySlider";
+import ContextualInsight from "./components/ContextualInsight";
 
 export default function App() {
   const [models, setModels] = useState([]);
@@ -16,9 +18,11 @@ export default function App() {
   const [results, setResults] = useState([]);
   const [robustness, setRobustness] = useState([]);
   const [insights, setInsights] = useState([]);
+  const [testedSeverities, setTestedSeverities] = useState([]);
   const [selectedModel, setSelectedModel] = useState(null);
   const [selectedPerturbation, setSelectedPerturbation] = useState(null);
   const [selectedMetric, setSelectedMetric] = useState("accuracy");
+  const [selectedSeverity, setSelectedSeverity] = useState(null);
   const [error, setError] = useState(null);
   const [loading, setLoading] = useState(true);
 
@@ -36,8 +40,10 @@ export default function App() {
         setResults(r.results);
         setRobustness(ri.robustness_index);
         setInsights(ins.insights);
+        setTestedSeverities(r.tested_severities);
         setSelectedModel(m.models[0]?.model ?? null);
         setSelectedPerturbation(p.perturbations[0]?.name ?? null);
+        setSelectedSeverity(r.tested_severities[0] ?? null);
       })
       .catch((e) => setError(e.message))
       .finally(() => setLoading(false));
@@ -72,6 +78,19 @@ export default function App() {
 
       <section style={{ marginBottom: 16 }}>
         <label>
+          Model:{" "}
+          <select
+            value={selectedModel ?? ""}
+            onChange={(e) => setSelectedModel(e.target.value)}
+          >
+            {models.map((m) => (
+              <option key={m.model} value={m.model}>
+                {m.model}
+              </option>
+            ))}
+          </select>
+        </label>
+        <label style={{ marginLeft: 16 }}>
           Perturbation:{" "}
           <select
             value={selectedPerturbation ?? ""}
@@ -109,36 +128,44 @@ export default function App() {
       <p style={{ color: "#777", fontSize: 14, marginTop: 0 }}>
         Each line is one model's {selectedMetric} as perturbation severity
         increases (severity 0 = clean baseline). Error bars are ±1 std across
-        the 5 seeds. A steeper drop means less robust.
+        the 5 seeds. A steeper drop means less robust. The dashed line marks the
+        severity selected below.
       </p>
       <DegradationChart
         results={results}
         models={models}
         perturbation={selectedPerturbation}
         metric={selectedMetric}
+        selectedSeverity={selectedSeverity}
+      />
+
+      <SeveritySlider
+        severities={testedSeverities}
+        selectedSeverity={selectedSeverity}
+        onChange={setSelectedSeverity}
+        results={results}
+        models={models}
+        perturbation={selectedPerturbation}
+        metric={selectedMetric}
+      />
+
+      <h2>Insight</h2>
+      <ContextualInsight
+        results={results}
+        models={models}
+        model={selectedModel}
+        perturbation={selectedPerturbation}
+        severity={selectedSeverity}
+        metric={selectedMetric}
+        insights={insights}
       />
 
       <h2>Robustness index</h2>
       <RobustnessCards robustness={robustness} />
 
       <h2 style={{ marginTop: 32 }}>
-        Aggregated results — {selectedPerturbation}
+        Aggregated results — {selectedModel} / {selectedPerturbation}
       </h2>
-      <section style={{ marginBottom: 8 }}>
-        <label>
-          Model:{" "}
-          <select
-            value={selectedModel ?? ""}
-            onChange={(e) => setSelectedModel(e.target.value)}
-          >
-            {models.map((m) => (
-              <option key={m.model} value={m.model}>
-                {m.model}
-              </option>
-            ))}
-          </select>
-        </label>
-      </section>
       <table border="1" cellPadding="6" style={{ borderCollapse: "collapse" }}>
         <thead>
           <tr>
@@ -150,7 +177,14 @@ export default function App() {
         </thead>
         <tbody>
           {rows.map((r) => (
-            <tr key={r.severity}>
+            <tr
+              key={r.severity}
+              style={
+                r.severity === selectedSeverity
+                  ? { background: "#fff6e0" }
+                  : undefined
+              }
+            >
               <td>{r.severity}</td>
               {METRICS.map((m) => (
                 <td key={m}>
@@ -162,7 +196,7 @@ export default function App() {
         </tbody>
       </table>
 
-      <h2>Insights</h2>
+      <h2>All insights</h2>
       <ul>
         {insights.map((line, i) => (
           <li key={i}>{line}</li>

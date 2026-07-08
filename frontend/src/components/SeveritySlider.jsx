@@ -60,11 +60,11 @@ export default function SeveritySlider({
         ))}
       </div>
 
-      <table style={{ marginTop: 12, borderCollapse: "collapse", fontSize: 14 }}>
+      <table className="readout-table">
         <thead>
           <tr>
-            <th style={{ textAlign: "left", paddingRight: 16 }}>model</th>
-            <th style={{ textAlign: "left" }}>
+            <th>model</th>
+            <th>
               {metric} at severity {selectedSeverity}
             </th>
           </tr>
@@ -74,14 +74,8 @@ export default function SeveritySlider({
             <tr key={r.model}>
               <td style={{ paddingRight: 16 }}>
                 <span
-                  style={{
-                    display: "inline-block",
-                    width: 10,
-                    height: 10,
-                    borderRadius: 2,
-                    background: MODEL_COLORS[r.model],
-                    marginRight: 6,
-                  }}
+                  className="color-swatch"
+                  style={{ background: MODEL_COLORS[r.model] }}
                 />
                 {r.model}
               </td>

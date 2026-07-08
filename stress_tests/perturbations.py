@@ -56,7 +56,14 @@ def introduce_missing(
     mask = rng.random(numeric.shape) < severity
     numeric[mask] = np.nan
 
-    X_missing[NUMERIC_COLUMNS] = numeric.fillna(numeric.agg(strategy))
+    imputed = numeric.fillna(numeric.agg(strategy))
+    # Safety net for the degenerate case where a whole column is missing (only
+    # reachable near severity=1.0, outside the tested grid [0.1-0.5]): the
+    # column's median is then undefined (NaN), so fall back to 0 — the mean of
+    # the standardized numeric features. For the tested severities every column
+    # keeps enough observed values that the median always fills, so this
+    # fallback never fires and results.csv is unchanged.
+    X_missing[NUMERIC_COLUMNS] = imputed.fillna(0.0)
     return X_missing
 
 

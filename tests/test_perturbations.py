@@ -2,7 +2,7 @@
 Phase 7, Day 16 — unit tests for the stress-test perturbation functions.
 
 Core invariants verified for every perturbation:
-- severity=0 returns the input unchanged (CLAUDE.md non-negotiable),
+- severity=0 returns the input unchanged (project non-negotiable),
 - the same seed is reproducible,
 - one-hot categorical columns are never touched,
 - shape is preserved,
